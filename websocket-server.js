@@ -11,7 +11,7 @@ wss.on('error', function(err) {
 
 const db = new PouchDB('todos-server');
 
-server.listen(3001, function() {
+server.listen(3001, '0.0.0.0', function() {
   console.log((new Date()) + ' Server is listening on', server.address());
 });
 

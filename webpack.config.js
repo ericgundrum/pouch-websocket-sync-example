@@ -2,7 +2,6 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  debug: true,
   devtool: 'source-map',
   entry: [
     'webpack-hot-middleware/client',
@@ -14,19 +13,18 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
-      loaders: [ 'babel' ],
+      use: [ 'babel-loader' ],
       exclude: /node_modules/,
       include: __dirname
     }, {
       test: /\.css?$/,
-      loaders: [ 'style', 'raw' ],
+      use: [ 'style-loader', 'raw-loader' ],
       include: __dirname
     }]
   }

@@ -2,14 +2,15 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  debug: true,
+  devtool: 'source-map',
   entry: [
     'webpack-hot-middleware/client',
     './index'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'webpack_chunk.js',
     publicPath: '/static/'
   },
   plugins: [

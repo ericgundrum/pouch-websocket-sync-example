@@ -23,7 +23,7 @@
     "pipe-channels": "^0.1.1",
     "pouch-redux-middleware": "^0.1.0",
     "pouch-websocket-sync": "^0.1.5",
-    "pouchdb": "^5.1.0",
+    "pouchdb": "^6.1.2",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",

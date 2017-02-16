@@ -45,9 +45,9 @@ export default function configureStore() {
     path: '/todos',
     db,
     actions: {
-      remove: doc => store.dispatch({type: types.DELETE_TODO, id: doc._id}),
-      insert: doc => store.dispatch({type: types.INSERT_TODO, todo: doc}),
-      update: doc => store.dispatch({type: types.UPDATE_TODO, todo: doc}),
+      remove: doc => { return { type: types.DELETE_TODO, id: doc._id } },
+      insert: doc => { return { type: types.INSERT_TODO, todo: doc} },
+      update: doc => { return { type: types.UPDATE_TODO, todo: doc} },
     }
   })
   const createStoreWithMiddleware = applyMiddleware(pouchMiddleware)(createStore)

@@ -21,8 +21,9 @@ module.exports = {
       test: /\.js$/,
       loader: 'babel-loader',
       options: {
-        presets: ['react'],
-      },
+        presets: [['react'],
+         ['env', { targets: { browsers:['chrome 56'] }, modules:false }]
+      ]},
       exclude: /node_modules/,
       include: __dirname
     }, {

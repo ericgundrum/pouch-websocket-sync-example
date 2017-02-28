@@ -4,7 +4,7 @@ var webpack = require('webpack')
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'webpack-hot-middleware/client',
+//    'webpack-hot-middleware/client',
     './index'
   ],
   output: {
@@ -19,7 +19,11 @@ module.exports = {
   module: {
     rules: [{
       test: /\.js$/,
-      use: [ 'babel-loader' ],
+      loader: 'babel-loader',
+      options: {
+        presets: [['react'],
+         ['env', { targets: { browsers:['chrome 56'] }, modules:false }]
+      ]},
       exclude: /node_modules/,
       include: __dirname
     }, {

@@ -1,4 +1,3 @@
-import 'stream-browserify'  // import early to avoid 'stream' dependency cycle
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'

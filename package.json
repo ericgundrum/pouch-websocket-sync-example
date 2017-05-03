@@ -1,19 +1,19 @@
 {
   "name": "pouch-websocket-sync-example",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Redux, PouchDB and Sync TodoMVC example",
   "scripts": {
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pgte/pouch-websocket-sync-example.git"
+    "url": "https://github.com/ericgundrum/pouch-websocket-sync-example.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pgte/pouch-websocket-sync-example/issues"
+    "url": "https://github.com/ericgundrum/pouch-websocket-sync-example/issues"
   },
-  "homepage": "https://github.com/pgte/pouch-websocket-sync-example",
+  "homepage": "https://github.com/ericgundrum/pouch-websocket-sync-example",
   "dependencies": {
     "classnames": "",
     "deep-equal": "",

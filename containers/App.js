@@ -7,7 +7,7 @@ import SyncStatus from '../components/SyncStatus'
 import * as TodoActions from '../actions/todos'
 
 class App extends Component {
-  render() {
+  render () {
     const { todos, actions, syncState } = this.props
     return (
       <div>
@@ -24,14 +24,14 @@ App.propTypes = {
   actions: PropTypes.object.isRequired
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
     todos: state.todos,
-    syncState: state.syncState,
+    syncState: state.syncState
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     actions: bindActionCreators(TodoActions, dispatch)
   }

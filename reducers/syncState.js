@@ -4,7 +4,7 @@ const initialState = {
   text: 'unknown'
 }
 
-export default function syncState(state = initialState, action) {
+export default function syncState (state = initialState, action) {
   switch (action.type) {
     case SET_SYNC_STATE:
       return { text: action.text }

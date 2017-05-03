@@ -5,8 +5,8 @@ import rootReducer from '../reducers'
 import PouchDB from 'pouchdb'
 import PouchSync from 'pouch-websocket-sync'
 
-const syncEvents = ['change', 'paused', 'active', 'denied', 'complete', 'error'];
-const clientEvents = ['connect', 'disconnect', 'reconnect'];
+const syncEvents = ['change', 'paused', 'active', 'denied', 'complete', 'error']
+const clientEvents = ['connect', 'disconnect', 'reconnect']
 
 const initialState = {
   todos: [],
@@ -15,29 +15,29 @@ const initialState = {
   }
 }
 
-export default function configureStore() {
-  const db = new PouchDB('todos');
+export default function configureStore () {
+  const db = new PouchDB('todos')
 
   const syncClient = PouchSync.createClient()
 
-  const sync = syncClient.
-    connect('ws://localhost:3001').
-    on('error', function(err) {
-      console.log(err);
-    }).
-    sync(db, {
-      remoteName: 'todos-server',
+  const sync = syncClient
+    .connect('ws://localhost:3001')
+    .on('error', function (err) {
+      console.log(err)
+    })
+    .sync(db, {
+      remoteName: 'todos-server'
     })
 
-  syncEvents.forEach(function(event) {
-    sync.on(event, function() {
-      store.dispatch({type: types.SET_SYNC_STATE, text: event});
+  syncEvents.forEach(function (event) {
+    sync.on(event, function () {
+      store.dispatch({type: types.SET_SYNC_STATE, text: event})
     })
   })
 
-  clientEvents.forEach(function(event) {
-    syncClient.on(event, function() {
-      store.dispatch({type: types.SET_SYNC_STATE, text: event});
+  clientEvents.forEach(function (event) {
+    syncClient.on(event, function () {
+      store.dispatch({type: types.SET_SYNC_STATE, text: event})
     })
   })
 
@@ -46,8 +46,8 @@ export default function configureStore() {
     db,
     actions: {
       remove: doc => { return { type: types.DELETE_TODO, id: doc._id } },
-      insert: doc => { return { type: types.INSERT_TODO, todo: doc} },
-      update: doc => { return { type: types.UPDATE_TODO, todo: doc} },
+      insert: doc => { return { type: types.INSERT_TODO, todo: doc } },
+      update: doc => { return { type: types.UPDATE_TODO, todo: doc } }
     }
   })
   const createStoreWithMiddleware = applyMiddleware(pouchMiddleware)(createStore)

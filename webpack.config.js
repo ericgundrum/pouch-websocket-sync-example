@@ -22,8 +22,8 @@ module.exports = {
       loader: 'babel-loader',
       options: {
         presets: [['react'],
-         ['env', { targets: { browsers:['chrome 56'] }, modules:false }]
-      ]},
+          ['env', { targets: { browsers: ['chrome 56'] }, modules: false }]
+        ]},
       exclude: /node_modules/,
       include: __dirname
     }, {
@@ -33,7 +33,6 @@ module.exports = {
     }]
   }
 }
-
 
 // When inside Redux repo, prefer src to compiled version.
 // You can safely delete these lines in your project.

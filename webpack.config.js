@@ -14,7 +14,13 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    function () {
+      this.plugin('watch-run', function (watching, callback) {
+        console.log('--> begin compile at ' + new Date().toLocaleTimeString())
+        callback()
+      })
+    }
   ],
   module: {
     rules: [{

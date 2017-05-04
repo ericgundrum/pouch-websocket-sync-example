@@ -31,11 +31,13 @@
     "xtend": ""
   },
   "devDependencies": {
+    "babel-cli": "",
     "babel-core": "",
     "babel-loader": "",
     "babel-plugin-react-transform": "",
     "babel-preset-env": "",
     "babel-preset-react": "",
+    "cheerio": "",
     "concurrently": "",
     "expect": "",
     "express": "",
@@ -45,6 +47,7 @@
     "react-addons-test-utils": "",
     "react-transform-hmr": "",
     "style-loader": "",
+    "tape": "",
     "todomvc-app-css": "",
     "webpack": "",
     "webpack-dev-middleware": "",

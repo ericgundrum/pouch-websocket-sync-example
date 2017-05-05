@@ -35,6 +35,7 @@
     "babel-core": "",
     "babel-loader": "",
     "babel-plugin-react-transform": "",
+    "babel-plugin-transform-object-rest-spread": "",
     "babel-preset-env": "",
     "babel-preset-react": "",
     "cheerio": "",

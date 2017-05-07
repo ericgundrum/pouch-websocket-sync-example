@@ -60,6 +60,32 @@
     "webpack-dev-middleware": "",
     "webpack-hot-middleware": ""
   },
+  "babel": {
+    "plugins": [
+      "transform-object-rest-spread"
+    ],
+    "presets": [
+      [
+        "react"
+      ],
+      [
+        "env",
+        {
+          "targets": {
+            "chrome": 58,
+            "node": true
+          }
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "nyc": {
     "watermarks": {
       "lines": [

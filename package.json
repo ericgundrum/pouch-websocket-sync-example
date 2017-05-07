@@ -3,6 +3,8 @@
   "version": "0.2.0",
   "description": "Redux, PouchDB and Sync TodoMVC example",
   "scripts": {
+    "test": "NODE_ENV=test nyc babel-tape-runner ./**/*.spec.js",
+    "test-only": "NODE_ENV=test nyc babel-tape-runner",
     "start": "concurrently -k -c 'red.dim,green' 'node websocket-server' 'node server'"
   },
   "repository": {
@@ -34,16 +36,20 @@
     "babel-cli": "",
     "babel-core": "",
     "babel-loader": "",
+    "babel-plugin-istanbul": "",
     "babel-plugin-react-transform": "",
     "babel-plugin-transform-object-rest-spread": "",
     "babel-preset-env": "",
     "babel-preset-react": "",
+    "babel-register": "",
+    "babel-tape-runner": "",
     "cheerio": "",
     "concurrently": "",
     "expect": "",
     "express": "",
     "jsdom": "",
     "node-libs-browser": "",
+    "nyc": "",
     "raw-loader": "",
     "react-addons-test-utils": "",
     "react-transform-hmr": "",
@@ -53,5 +59,38 @@
     "webpack": "",
     "webpack-dev-middleware": "",
     "webpack-hot-middleware": ""
+  },
+  "nyc": {
+    "watermarks": {
+      "lines": [
+        90,
+        95
+      ],
+      "functions": [
+        90,
+        95
+      ],
+      "branches": [
+        90,
+        95
+      ],
+      "statements": [
+        90,
+        95
+      ]
+    },
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "exclude": [
+      "**/*.spec.js"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "babel-cache": true,
+    "cache": true,
+    "temp-directory": "coverage/.nyc_out",
+    "clean": true
   }
 }

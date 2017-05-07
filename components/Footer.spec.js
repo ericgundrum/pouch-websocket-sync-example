@@ -16,6 +16,15 @@ test('Footer', nest => {
     onShow: () => {}
   }
 
+  nest.test('.footer element', assert => {
+    const props = { ...defaultProps }
+
+    const el = dom.load(render(<Footer {...props} />))('footer')
+    assert.ok(el.is('footer'), 'exists')
+    assert.ok(el.hasClass('footer'), 'has class \'footer\'')
+    assert.end()
+  })
+
   nest.test('.TodoCount', nest => {
     nest.test('..with no active items', assert => {
       const props = { ...defaultProps, activeCount: 0 }

@@ -2,7 +2,7 @@ import { ADD_TODO, INSERT_TODO, DELETE_TODO, EDIT_TODO, UPDATE_TODO, COMPLETE_TO
 
 const initialState = []
 
-export default function todos(state = initialState, action) {
+export default function todos (state = initialState, action) {
   switch (action.type) {
     case ADD_TODO:
       return [
@@ -27,23 +27,23 @@ export default function todos(state = initialState, action) {
 
     case EDIT_TODO:
       return state.map(todo =>
-        todo._id === action.id ?
-          Object.assign({}, todo, { text: action.text }) :
-          todo
+        todo._id === action.id
+        ? Object.assign({}, todo, { text: action.text })
+        : todo
       )
 
     case UPDATE_TODO:
       return state.map(todo =>
-        todo._id === action.todo._id ?
-          action.todo :
-          todo
+        todo._id === action.todo._id
+          ? action.todo
+          : todo
       )
 
     case COMPLETE_TODO:
       return state.map(todo =>
-        todo._id === action.id ?
-          Object.assign({}, todo, { completed: !todo.completed }) :
-          todo
+        todo._id === action.id
+          ? Object.assign({}, todo, { completed: !todo.completed })
+          : todo
       )
 
     case COMPLETE_ALL:
@@ -60,6 +60,6 @@ export default function todos(state = initialState, action) {
   }
 }
 
-function id() {
-  return Math.random().toString(36).substring(7);
+function id () {
+  return Math.random().toString(36).substring(7)
 }

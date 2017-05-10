@@ -3,18 +3,18 @@ import classnames from 'classnames'
 import TodoTextInput from './TodoTextInput'
 
 class TodoItem extends Component {
-  constructor(props, context) {
+  constructor (props, context) {
     super(props, context)
     this.state = {
       editing: false
     }
   }
 
-  handleDoubleClick() {
+  handleDoubleClick () {
     this.setState({ editing: true })
   }
 
-  handleSave(id, text) {
+  handleSave (id, text) {
     if (text.length === 0) {
       this.props.deleteTodo(id)
     } else {
@@ -23,28 +23,28 @@ class TodoItem extends Component {
     this.setState({ editing: false })
   }
 
-  render() {
+  render () {
     const { todo, completeTodo, deleteTodo } = this.props
 
     let element
     if (this.state.editing) {
       element = (
         <TodoTextInput text={todo.text}
-                       editing={this.state.editing}
-                       onSave={(text) => this.handleSave(todo._id, text)} />
+          editing={this.state.editing}
+          onSave={(text) => this.handleSave(todo._id, text)} />
       )
     } else {
       element = (
-        <div className="view">
-          <input className="toggle"
-                 type="checkbox"
-                 checked={todo.completed}
-                 onChange={() => completeTodo(todo._id)} />
+        <div className='view'>
+          <input className='toggle'
+            type='checkbox'
+            checked={todo.completed}
+            onChange={() => completeTodo(todo._id)} />
           <label onDoubleClick={this.handleDoubleClick.bind(this)}>
             {todo.text}
           </label>
-          <button className="destroy"
-                  onClick={() => deleteTodo(todo._id)} />
+          <button className='destroy'
+            onClick={() => deleteTodo(todo._id)} />
         </div>
       )
     }

@@ -10,35 +10,35 @@ const TODO_FILTERS = {
 }
 
 class MainSection extends Component {
-  constructor(props, context) {
+  constructor (props, context) {
     super(props, context)
     this.state = { filter: SHOW_ALL }
   }
 
-  handleClearCompleted() {
+  handleClearCompleted () {
     const atLeastOneCompleted = this.props.todos.some(todo => todo.completed)
     if (atLeastOneCompleted) {
       this.props.actions.clearCompleted()
     }
   }
 
-  handleShow(filter) {
+  handleShow (filter) {
     this.setState({ filter })
   }
 
-  renderToggleAll(completedCount) {
+  renderToggleAll (completedCount) {
     const { todos, actions } = this.props
     if (todos.length > 0) {
       return (
-        <input className="toggle-all"
-               type="checkbox"
-               checked={completedCount === todos.length}
-               onChange={actions.completeAll} />
+        <input className='toggle-all'
+          type='checkbox'
+          checked={completedCount === todos.length}
+          onChange={actions.completeAll} />
       )
     }
   }
 
-  renderFooter(completedCount) {
+  renderFooter (completedCount) {
     const { todos } = this.props
     const { filter } = this.state
     const activeCount = todos.length - completedCount
@@ -46,15 +46,15 @@ class MainSection extends Component {
     if (todos.length) {
       return (
         <Footer completedCount={completedCount}
-                activeCount={activeCount}
-                filter={filter}
-                onClearCompleted={this.handleClearCompleted.bind(this)}
-                onShow={this.handleShow.bind(this)} />
+          activeCount={activeCount}
+          filter={filter}
+          onClearCompleted={this.handleClearCompleted.bind(this)}
+          onShow={this.handleShow.bind(this)} />
       )
     }
   }
 
-  render() {
+  render () {
     const { todos, actions } = this.props
     const { filter } = this.state
 
@@ -65,9 +65,9 @@ class MainSection extends Component {
     )
 
     return (
-      <section className="main">
+      <section className='main'>
         {this.renderToggleAll(completedCount)}
-        <ul className="todo-list">
+        <ul className='todo-list'>
           {filteredTodos.map(todo =>
             <TodoItem key={todo._id} todo={todo} {...actions} />
           )}

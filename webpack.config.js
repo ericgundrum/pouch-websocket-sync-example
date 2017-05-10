@@ -14,16 +14,18 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    function () {
+      this.plugin('watch-run', function (watching, callback) {
+        console.log('--> begin compile at ' + new Date().toLocaleTimeString())
+        callback()
+      })
+    }
   ],
   module: {
     rules: [{
       test: /\.js$/,
       loader: 'babel-loader',
-      options: {
-        presets: [['react'],
-         ['env', { targets: { browsers:['chrome 56'] }, modules:false }]
-      ]},
       exclude: /node_modules/,
       include: __dirname
     }, {
@@ -33,7 +35,6 @@ module.exports = {
     }]
   }
 }
-
 
 // When inside Redux repo, prefer src to compiled version.
 // You can safely delete these lines in your project.

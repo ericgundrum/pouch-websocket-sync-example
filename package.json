@@ -1,55 +1,122 @@
 {
   "name": "pouch-websocket-sync-example",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Redux, PouchDB and Sync TodoMVC example",
   "scripts": {
-    "start": "node server.js",
-    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
-    "test:watch": "npm test -- --watch"
+    "test": "NODE_ENV=test nyc babel-tape-runner ./**/*.spec.js",
+    "test-only": "NODE_ENV=test nyc babel-tape-runner",
+    "start": "concurrently -k -c 'red.dim,green' 'node websocket-server' 'node server'"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pgte/pouch-websocket-sync-example.git"
+    "url": "https://github.com/ericgundrum/pouch-websocket-sync-example.git"
   },
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pgte/pouch-websocket-sync-example/issues"
+    "url": "https://github.com/ericgundrum/pouch-websocket-sync-example/issues"
   },
-  "homepage": "https://github.com/pgte/pouch-websocket-sync-example",
+  "homepage": "https://github.com/ericgundrum/pouch-websocket-sync-example",
   "dependencies": {
-    "classnames": "^2.2.5",
-    "deep-equal": "^1.0.1",
-    "json-path": "^0.1.3",
-    "pipe-channels": "^0.1.1",
-    "pouch-redux-middleware": "^0.6.0",
+    "classnames": "",
+    "deep-equal": "",
+    "json-path": "",
+    "pipe-channels": "",
+    "pouch-redux-middleware": "",
     "pouch-remote-stream": "git+https://github.com/ericgundrum/pouch-remote-stream.git#pouchdb-6-support",
-    "pouch-websocket-sync": "^0.3.0",
-    "pouchdb": "^6.1.2",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.2",
-    "reconnect-core": "^1.3.0",
-    "redux": "^3.6.0",
-    "xtend": "^4.0.1"
+    "pouch-websocket-sync": "",
+    "pouchdb": "",
+    "react": "",
+    "react-dom": "",
+    "react-redux": "",
+    "reconnect-core": "",
+    "redux": "",
+    "xtend": ""
   },
   "devDependencies": {
-    "babel-core": "^6.23.1",
-    "babel-loader": "^6.3.1",
-    "babel-plugin-react-transform": "^2.0.2",
-    "babel-preset-env": "^1.1.8",
-    "babel-preset-react": "^6.23.0",
-    "expect": "^1.8.0",
-    "express": "^4.13.3",
-    "jsdom": "^9.11.0",
-    "mocha": "^3.2.0",
-    "node-libs-browser": "^2.0.0",
-    "raw-loader": "^0.5.1",
-    "react-addons-test-utils": "^15.4.2",
-    "react-transform-hmr": "^1.0.0",
-    "style-loader": "^0.13.1",
-    "todomvc-app-css": "^2.0.1",
-    "webpack": "^2.1.1",
-    "webpack-dev-middleware": "^1.10.0",
-    "webpack-hot-middleware": "^2.16.1"
+    "babel-cli": "",
+    "babel-core": "",
+    "babel-loader": "",
+    "babel-plugin-istanbul": "",
+    "babel-plugin-react-transform": "",
+    "babel-plugin-transform-object-rest-spread": "",
+    "babel-preset-env": "",
+    "babel-preset-react": "",
+    "babel-register": "",
+    "babel-tape-runner": "",
+    "cheerio": "",
+    "concurrently": "",
+    "expect": "",
+    "express": "",
+    "jsdom": "",
+    "node-libs-browser": "",
+    "nyc": "",
+    "raw-loader": "",
+    "react-addons-test-utils": "",
+    "react-transform-hmr": "",
+    "style-loader": "",
+    "tape": "",
+    "todomvc-app-css": "",
+    "webpack": "",
+    "webpack-dev-middleware": "",
+    "webpack-hot-middleware": ""
+  },
+  "babel": {
+    "plugins": [
+      "transform-object-rest-spread"
+    ],
+    "presets": [
+      [
+        "react"
+      ],
+      [
+        "env",
+        {
+          "targets": {
+            "chrome": 58,
+            "node": true
+          }
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "watermarks": {
+      "lines": [
+        90,
+        95
+      ],
+      "functions": [
+        90,
+        95
+      ],
+      "branches": [
+        90,
+        95
+      ],
+      "statements": [
+        90,
+        95
+      ]
+    },
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "exclude": [
+      "**/*.spec.js"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "babel-cache": true,
+    "cache": true,
+    "temp-directory": "coverage/.nyc_out",
+    "clean": true
   }
 }

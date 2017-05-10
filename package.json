@@ -25,6 +25,7 @@
     "pouch-remote-stream": "git+https://github.com/ericgundrum/pouch-remote-stream.git#pouchdb-6-support",
     "pouch-websocket-sync": "",
     "pouchdb": "",
+    "prop-types": "",
     "react": "",
     "react-dom": "",
     "react-redux": "",

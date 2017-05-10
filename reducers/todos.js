@@ -1,8 +1,11 @@
-import { ADD_TODO, INSERT_TODO, DELETE_TODO, EDIT_TODO, UPDATE_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
+import debugReport from 'debug'
+import { ADD_TODO, INSERT_TODO, BATCH_INSERT_TODOS, DELETE_TODO, EDIT_TODO, UPDATE_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
 
 const initialState = []
+const debug = debugReport('reducers/todos')
 
 export default function todos (state = initialState, action) {
+  debug('action', action)
   switch (action.type) {
     case ADD_TODO:
       return [
@@ -17,6 +20,12 @@ export default function todos (state = initialState, action) {
     case INSERT_TODO:
       return [
         action.todo,
+        ...state
+      ]
+
+    case BATCH_INSERT_TODOS:
+      return [
+        ...action.todos,
         ...state
       ]
 

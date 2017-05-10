@@ -1,6 +1,7 @@
 export const ERROR = 'ERROR'
 export const ADD_TODO = 'ADD_TODO'
 export const INSERT_TODO = 'INSERT_TODO'
+export const BATCH_INSERT_TODOS = 'BATCH_INSERT_TODOS'
 export const DELETE_TODO = 'DELETE_TODO'
 export const EDIT_TODO = 'EDIT_TODO'
 export const UPDATE_TODO = 'UPDATE_TODO'

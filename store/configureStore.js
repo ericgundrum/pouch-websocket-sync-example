@@ -47,6 +47,7 @@ export default function configureStore () {
     actions: {
       remove: doc => { return { type: types.DELETE_TODO, id: doc._id } },
       insert: doc => { return { type: types.INSERT_TODO, todo: doc } },
+      batchInsert: docs => { return { type: types.BATCH_INSERT_TODOS, todos: docs } },
       update: doc => { return { type: types.UPDATE_TODO, todo: doc } }
     }
   })

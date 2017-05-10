@@ -1,5 +1,5 @@
 import test from 'tape'
-import { ADD_TODO, INSERT_TODO, DELETE_TODO, EDIT_TODO, UPDATE_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
+import { ADD_TODO, INSERT_TODO, BATCH_INSERT_TODOS, DELETE_TODO, EDIT_TODO, UPDATE_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
 import rd from './todos'
 
 test('reducer todos', nest => {
@@ -28,6 +28,12 @@ test('reducer todos', nest => {
     const st = rd([...testState], {type: INSERT_TODO, todo: {...testTodo}})
     assert.deepEqual(st[0], testTodo, 'prepends supplied todo to state')
     assert.deepEqual(st[1], testState[0], 'does not alter other todos')
+    assert.end()
+  })
+  nest.test('BATCH_INSERT_TODOS', assert => {
+    const batch = [{...testTodo}, {...testTodo, _id: 'tt2'}]
+    const st = rd([...testState], {type: BATCH_INSERT_TODOS, todos: [...batch]})
+    assert.deepEqual(st, [...batch, ...testState], 'prepends supplied todos to state')
     assert.end()
   })
   nest.test('DELETE_TODO', assert => {

@@ -1,75 +1,74 @@
 import React from 'react'
-import reactDom from 'react-dom/server'
+import skin from 'skin-deep'
 import test from 'tape'
-import dom from 'cheerio'
-
 import Footer from './Footer'
+import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters'
 
-const render = reactDom.renderToStaticMarkup
+let spied
+const propsNull = {
+  activeCount: 0,
+  completedCount: 0,
+  filter: '',
+  onClearCompleted: () => { spied = 'onClearCompleted' },
+  onShow: (f) => { spied = f }
+}
 
-test('Footer', nest => {
-  const defaultProps = {
-    activeCount: 0,
-    completedCount: 0,
-    filter: '',
-    onClearCompleted: () => {},
-    onShow: () => {}
-  }
-
-  nest.test('.footer element', assert => {
-    const props = { ...defaultProps }
-
-    const el = dom.load(render(<Footer {...props} />))('footer')
-    assert.ok(el.is('footer'), 'exists')
-    assert.ok(el.hasClass('footer'), 'has class \'footer\'')
-    assert.end()
-  })
-
-  nest.test('.TodoCount', nest => {
-    nest.test('..with no active items', assert => {
-      const props = { ...defaultProps, activeCount: 0 }
-      const el = dom.load(render(<Footer {...props} />))('.todo-count')
-      assert.equal(el.text(), 'No items left', 'must render \'No items left\'')
-      assert.end()
-    })
-    nest.test('..with 1 active item', assert => {
-      const props = { ...defaultProps, activeCount: 1 }
-      const el = dom.load(render(<Footer {...props} />))('.todo-count')
-      assert.equal(el.text(), '1 item left', 'must render \'1 item left\'')
-      assert.end()
-    })
-    nest.test('..with more than one active items', assert => {
-      const props = { ...defaultProps, activeCount: 42 }
-      const el = dom.load(render(<Footer {...props} />))('.todo-count')
-      assert.equal(el.text(), '42 items left', 'must render \'<n> items left\'')
-      assert.end()
-    })
-  })
-
-  nest.test('.filter button list', assert => {
-    const props = { ...defaultProps, filter: 'show_active' }
-
-    const list = dom.load(render(<Footer {...props} />))('.filters')
-
-    assert.equal(list.find('a').eq(0).text(), 'All', 'must begin with \'All\'')
-    assert.equal(list.find('a').eq(1).text(), 'Active', 'must contain \'Active\'')
-    assert.equal(list.find('a').eq(2).text(), 'Completed', 'must end with \'Completed\'')
-    assert.equal(list.find('.selected').text(), 'Active', 'must render selected from {props.filter}')
-    assert.end()
-  })
-
-  nest.test('.Clear button', nest => {
-    nest.test('..with no completed items', assert => {
-      const props = { ...defaultProps, completedCount: 0 }
-      const el = dom.load(render(<Footer {...props} />))('.clear-completed')
-      assert.equal(el.html(), null, 'must not render')
-      assert.end()
-    })
-    nest.test('..with 1 completed item', assert => {
-      const props = { ...defaultProps, completedCount: 1 }
-      const el = dom.load(render(<Footer {...props} />))('.clear-completed')
-      assert.equal(el.html(), 'Clear completed', 'must render')
-      assert.end()
-    })
-  })
+test('<Footer/> renders as <footer> with class \'footer\'', ck => {
+  const tree = skin.shallowRender(<Footer {...propsNull} />)
+  ck.is(tree.type, 'footer')
+  ck.is(tree.props.className, 'footer')
+  ck.end()
+})
+test('<Footer/> TodoCount, when no active items, renders \'No items left\'', ck => {
+  const tree = skin.shallowRender(<Footer {...propsNull} />)
+  ck.is(tree.subTree('.todo-count').text(), 'No items left')
+  ck.end()
+})
+test('<Footer/> TodoCount, when 1 active item, renders \'1 item left\'', ck => {
+  const props = { ...propsNull, activeCount: 1 }
+  const tree = skin.shallowRender(<Footer {...props} />)
+  ck.is(tree.subTree('.todo-count').text(), '1 item left')
+  ck.end()
+})
+test('<Footer/> TodoCount, when multiple active items, renders \'<n> items left\'', ck => {
+  const props = { ...propsNull, activeCount: 42 }
+  const tree = skin.shallowRender(<Footer {...props} />)
+  ck.is(tree.subTree('.todo-count').text(), '42 items left')
+  ck.end()
+})
+test('<Footer/> Filter List renders with 3 links; props.filter link selected', ck => {
+  const props = { ...propsNull, filter: 'show_active' }
+  const tree = skin.shallowRender(<Footer {...props} />).subTree('.filters')
+  ck.is(tree.props.children[0].key, SHOW_ALL)
+  ck.is(tree.props.children[1].key, SHOW_ACTIVE)
+  ck.is(tree.props.children[2].key, SHOW_COMPLETED)
+  ck.is(tree.subTree('.selected').props.children, 'Active')
+  ck.end()
+})
+test('<Footer/> Filter List click a link calls onClearCompleted with filter', ck => {
+  spied = undefined
+  const tree = skin.shallowRender(<Footer {...propsNull} />).subTree('.filters')
+  tree.props.children[2].props.children.props.onClick()
+  ck.is(spied, SHOW_COMPLETED, 'spied')
+  ck.end()
+})
+test('<Footer/> Clear button renders when at least one item is completed', ck => {
+  const props = { ...propsNull, completedCount: 1 }
+  const tree = skin.shallowRender(<Footer {...props} />)
+  ck.is(tree.subTree('.clear-completed').text(), 'Clear completed')
+  ck.end()
+})
+test('<Footer/> Clear button does not render when no items are completed', ck => {
+  const props = { ...propsNull }
+  const tree = skin.shallowRender(<Footer {...props} />)
+  ck.is(tree.subTree('.clear-completed'), false, 'does not exist')
+  ck.end()
+})
+test('<Footer/> Clear button click calls props.onClearCompleted', ck => {
+  spied = undefined
+  const props = { ...propsNull, completedCount: 1 }
+  const tree = skin.shallowRender(<Footer {...props} />)
+  tree.subTree('.clear-completed').props.onClick()
+  ck.is(spied, 'onClearCompleted', 'spied')
+  ck.end()
 })

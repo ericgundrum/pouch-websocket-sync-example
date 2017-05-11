@@ -1,63 +1,100 @@
 import React from 'react'
-import reactDom from 'react-dom/server'
+import skin from 'skin-deep'
 import test from 'tape'
-import dom from 'cheerio'
-
 import MainSection from './MainSection'
+import { SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters'
 
-const render = reactDom.renderToStaticMarkup
-
-test('<MainSection/>', nest => {
-  const todoDone = { text: 'done todo text', completed: true }
-  const todoUndone = { text: 'undone todo text', completed: false }
-  const propsTest = {
-    todos: [
-      { ...todoDone, _id: 't1' },
-      { ...todoUndone, _id: 't2' },
-      { ...todoUndone, _id: 't3' }
-    ],
-    actions: {
-      completeAll: () => {},
-      editTodo: () => {},
-      completeTodo: () => {},
-      deleteTodo: () => {}
-    }
+let spied
+const todoDone = { text: 'done todo text', completed: true }
+const todoUndone = { text: 'undone todo text', completed: false }
+const todosDone = [
+    { ...todoDone, _id: 't1' },
+    { ...todoDone, _id: 't2' }
+]
+const propsNone = {
+  todos: [],
+  actions: {
+    completeAll: () => { spied = 'completeAll' },
+    clearCompleted: () => { spied = 'clearCompleted' },
+    editTodo: () => {},
+    completeTodo: () => {},
+    deleteTodo: () => {}
   }
-  const todosDone = [
-      { ...todoDone, _id: 't1' },
-      { ...todoDone, _id: 't2' }
+}
+const propsMix = {
+  ...propsNone,
+  todos: [
+    { ...todoDone, _id: 't1' },
+    { ...todoUndone, _id: 't2' },
+    { ...todoUndone, _id: 't3' }
   ]
+}
 
-  nest.test('.renders', assert => {
-    const props = { ...propsTest }
-    const el = dom.load(render(<MainSection {...props} />))('section')
-    assert.true(el.is('section'), 'in a <section>')
-    assert.true(el.hasClass('main'), 'with class \'main\'')
-    assert.true(el.children('footer'), 'with a <footer>')
-    assert.end()
-  })
-  nest.test('.renders the <section> with ToggleAll', assert => {
-    const props = { ...propsTest }
-    const el = dom.load(render(<MainSection {...props} />))('input')
-    assert.true(el.is('input'), 'as <input>')
-    assert.equals(el.attr('type'), 'checkbox', 'of type \'checkbox\'')
-    assert.true(el.hasClass('toggle-all'), 'with class \'toggle-all\'')
-    assert.false(el.prop('checked'), 'unchecked unless all are completed')
-    assert.end()
-  })
-  nest.test('.ToggleAll', assert => {
-    const props = { ...propsTest, todos: todosDone }
-    const el = dom.load(render(<MainSection {...props} />))('input')
-    assert.true(el.prop('checked'), 'checked when all are completed')
-    assert.end()
-  })
-  nest.test('.a list of <TodoItem/>', assert => {
-    const props = { ...propsTest }
-    const el = dom.load(render(<MainSection {...props} />))('ul')
-    assert.true(el.is('ul'), 'as <ul>')
-    assert.true(el.hasClass('todo-list'), 'of class \'todo-list\'')
-    assert.equal(el.children('li').has('div').length, 3,
-      'containing all todos as <li>')
-    assert.end()
-  })
+test('<MainSection/> renders in a <footer> and a <section> with class \'main\'', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsMix} />)
+  ck.is(tree.type, 'section')
+  ck.is(tree.props.className, 'main')
+  ck.ok(tree.subTree('Footer'))
+  ck.end()
+})
+test('<MainSection/> <footer> onClearCompleted() calls clearCompleted when a todo is done', ck => {
+  spied = undefined
+  skin.shallowRender(<MainSection {...propsMix} />).subTree('Footer').props.onClearCompleted()
+  ck.is(spied, 'clearCompleted', 'spied')
+  ck.end()
+})
+test('<MainSection/> <footer> onClearCompleted() skips clearCompleted when todos is empty', ck => {
+  spied = undefined
+  const props = { ...propsMix, todos: [todoUndone] }
+  skin.shallowRender(<MainSection {...props} />).subTree('Footer').props.onClearCompleted()
+  ck.is(spied, undefined)
+  ck.end()
+})
+test('<MainSection/> <footer> onShow() changes the filter state', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsMix} />)
+  console.log('SHOW_ALL length', tree.everySubTree('TodoItem').length)
+  ck.is(tree.everySubTree('TodoItem').length, 3, 'SHOW_ALL count')
+  tree.subTree('Footer').props.onShow(SHOW_ACTIVE)
+  tree.reRender(propsMix)
+  ck.is(tree.everySubTree('TodoItem').length, 2, 'SHOW_ACTIVE count')
+  tree.subTree('Footer').props.onShow(SHOW_COMPLETED)
+  tree.reRender(propsMix)
+  ck.is(tree.everySubTree('TodoItem').length, 1, 'SHOW_COMPLETED count')
+  ck.end()
+})
+test('<MainSection/> skips <footer> when todos is empty', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsNone} />).subTree('Footer')
+  ck.is(tree, false, 'no footer')
+  ck.end()
+})
+test('<MainSection/> skips toggle-all checkbox when todos is empty', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsNone} />).subTree('.toggle-all')
+  ck.is(tree, false, 'no items')
+  ck.end()
+})
+test('<MainSection/> renders toggle-all checkbox unckecked unless all are completed', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsMix} />).subTree('.toggle-all')
+  ck.is(tree.type, 'input')
+  ck.is(tree.props.type, 'checkbox')
+  ck.is(tree.props.checked, false, 'unchecked')
+  ck.end()
+})
+test('<MainSection/> renders toggle-all checkbox ckecked when all are completed', ck => {
+  const props = { ...propsMix, todos: todosDone }
+  const tree = skin.shallowRender(<MainSection {...props} />).subTree('.toggle-all')
+  ck.is(tree.props.checked, true, 'checked')
+  ck.end()
+})
+test('<MainSection/> toggle-all checkbox onChange() calls props.completeAll', ck => {
+  const expected = 'completeAll'
+  spied = undefined
+  const tree = skin.shallowRender(<MainSection {...propsMix} />).subTree('.toggle-all')
+  tree.props.onChange()
+  ck.is(spied, expected, 'spied')
+  ck.end()
+})
+test('<MainSection/> renders <TodoItem/> list of class \'todo-list\'', ck => {
+  const tree = skin.shallowRender(<MainSection {...propsMix} />).subTree('.todo-list')
+  ck.is(tree.everySubTree('TodoItem').length, propsMix.todos.length)
+  ck.end()
 })

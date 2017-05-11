@@ -1,69 +1,78 @@
 import React from 'react'
-import reactDom from 'react-dom/server'
-import test from 'tape'
-import dom from 'cheerio'
 import skin from 'skin-deep'
-
+import test from 'tape'
 import TodoTextInput from './TodoTextInput'
 
-const render = reactDom.renderToStaticMarkup
+let spied
+const propsExisting = {
+  editing: true,
+  newTodo: false,
+  placeholder: '',
+  text: 'e-text',
+  onSave: (t) => { spied = t }
+}
+const propsNew = {
+  editing: false,
+  newTodo: true,
+  placeholder: 'p-text',
+  text: '',
+  onSave: (t) => { spied = t }
+}
 
-test('TodoTextInput', nest => {
-  let saved
-  const defaultProps = {
-    editing: false,
-    newTodo: true,
-    placeholder: '',
-    text: '',
-    onSave: (t) => { saved = t }
-  }
-
-  nest.test('.initially renders', assert => {
-    const props = { ...defaultProps, placeholder: 'p-text' }
-    const el = dom.load(render(<TodoTextInput {...props} />))('input')
-    assert.true(el.is('input'), 'exists')
-    assert.false(el.hasClass('edit'), 'without class \'editing\'')
-    assert.true(el.hasClass('new-todo'), 'with class \'new-todo\'')
-    assert.equals(el.attr('type'), 'text', 'is type \'text\'')
-    assert.equals(el.attr('placeholder'), 'p-text', 'with placeholder \'p-text\'')
-    assert.end()
-  })
-  nest.test('.when editing existing renders', assert => {
-    const props = { ...defaultProps, editing: true, newTodo: false, text: 'e-text' }
-    const el = dom.load(render(<TodoTextInput {...props} />))('input')
-    assert.true(el.hasClass('edit'), 'with class \'editing\'')
-    assert.false(el.hasClass('new-todo'), 'without class \'new-todo\'')
-    assert.equals(el.val(), 'e-text', 'with props \'e-text\'')
-    assert.end()
-  })
-  nest.test('.when editing existing and user changes focus', assert => {
-    const props = { ...defaultProps, editing: true, newTodo: false, text: 'e-text' }
-    const tree = skin.shallowRender(<TodoTextInput {...props} />).getRenderOutput()
-    saved = undefined
-    tree.props.onBlur({target: {value: 'blur text'}})
-    assert.equal(saved, 'blur text', 'handleBlur calls onSave with <input> value')
-    assert.end()
-  })
-  nest.test('.when editing existing and user presses return', assert => {
-    const props = { ...defaultProps, editing: true, newTodo: false, text: 'e-text' }
-    const tree = skin.shallowRender(<TodoTextInput {...props} />).getRenderOutput()
-    console.log(tree)
-    saved = undefined
-    tree.props.onKeyDown({which: 13, target: {value: 'submit text\n'}})
-    assert.equal(saved, 'submit text', 'handleSubmit calls onSave with <input> value trimmed of trailing newline')
-    assert.end()
-  })
-  nest.test('.when editing new and user changes focus', assert => {
-    const props = { ...defaultProps, editing: true, newTodo: true, text: 'e-text' }
-    const tree = skin.shallowRender(<TodoTextInput {...props} />).getRenderOutput()
-    saved = undefined
-    tree.props.onBlur({target: {value: 'new blur text'}})
-    assert.equal(saved, undefined, 'handleBlur does not call onSave')
-    assert.end()
-  })
-  nest.skip('.when editing new and user presses return', assert => {
-    assert.comment('skip testing state')
-    assert.end()
-  })
-  nest.comment('cannot test state to verify handleChange without spy()')
+test('<TodoTextInput/> renders an auto-focus text <input> with supplied props', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsNew} />)
+  ck.is(tree.type, 'input')
+  ck.is(tree.props.className, 'new-todo')
+  ck.is(tree.props.type, 'text')
+  ck.is(tree.props.placeholder, 'p-text')
+  ck.ok(tree.props.autoFocus)
+  ck.end()
+})
+test('<TodoTextInput/>, when editing existing, renders props.value with class \'edit\'', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsExisting} />)
+  ck.is(tree.props.className, 'edit')
+  ck.is(tree.props.value, 'e-text')
+  ck.end()
+})
+test('<TodoTextInput/>, when loses focus while editing existing, calls onSave with <input> value', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsExisting} />)
+  spied = undefined
+  tree.props.onBlur({target: {value: 'blur text'}})
+  ck.is(spied, 'blur text')
+  ck.end()
+})
+test('<TodoTextInput/>, when loses focus while editing new, does not call onSave', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsNew} />)
+  spied = undefined
+  tree.props.onBlur({target: {value: 'new blur text'}})
+  ck.is(spied, undefined)
+  ck.end()
+})
+test('<TodoTextInput/>, submit while editing existing, calls onSave with <input> value without newline', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsExisting} />)
+  spied = undefined
+  tree.props.onKeyDown({which: 13, target: {value: 'submit text\n'}})
+  ck.is(spied, 'submit text')
+  ck.end()
+})
+test('<TodoTextInput/>, submit while editing existing, does not save when `which` is not `13`', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsExisting} />)
+  spied = undefined
+  tree.props.onKeyDown({which: 42, target: {value: '42 text\n'}})
+  ck.is(spied, undefined)
+  ck.end()
+})
+test('<TodoTextInput/>, submit while editing new, clears state.text after onSave', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsNew} />)
+  spied = undefined
+  tree.props.onKeyDown({which: 13, target: {value: 'submit text\n'}})
+  ck.comment('cannot check state without spy')
+  ck.end()
+})
+test('<TodoTextInput/>, while editing, updates state.text with new value', ck => {
+  const tree = skin.shallowRender(<TodoTextInput {...propsExisting} />)
+  spied = undefined
+  tree.props.onChange({target: {value: 'changed text'}})
+  ck.comment('cannot check state without spy')
+  ck.end()
 })

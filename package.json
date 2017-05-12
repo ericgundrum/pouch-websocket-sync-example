@@ -18,9 +18,7 @@
   "homepage": "https://github.com/ericgundrum/pouch-websocket-sync-example",
   "dependencies": {
     "classnames": "",
-    "deep-equal": "",
-    "json-path": "",
-    "pipe-channels": "",
+    "debug": "",
     "pouch-redux-middleware": "",
     "pouch-remote-stream": "git+https://github.com/ericgundrum/pouch-remote-stream.git#pouchdb-6-support",
     "pouch-websocket-sync": "",
@@ -29,9 +27,7 @@
     "react": "",
     "react-dom": "",
     "react-redux": "",
-    "reconnect-core": "",
-    "redux": "",
-    "xtend": ""
+    "redux": ""
   },
   "devDependencies": {
     "babel-cli": "",
@@ -44,12 +40,8 @@
     "babel-preset-react": "",
     "babel-register": "",
     "babel-tape-runner": "",
-    "cheerio": "",
     "concurrently": "",
-    "debug": "",
-    "expect": "",
     "express": "",
-    "jsdom": "",
     "node-libs-browser": "",
     "nyc": "",
     "raw-loader": "",
